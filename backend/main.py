@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware  # 1. Import the middleware
+from langchain_huggingface import HuggingFaceInferenceAPIEmbeddings
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -15,8 +16,9 @@ load_dotenv()
 app = FastAPI()
 
 
-embeddings = HuggingFaceEmbeddings(
-    model_name="all-MiniLM-L6-v2"
+embeddings = HuggingFaceInferenceAPIEmbeddings(
+    api_key=os.getenv("HF_TOKEN"), # Better yet: os.getenv("HUGGINGFACEHUB_API_TOKEN")
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
 db = FAISS.load_local(
